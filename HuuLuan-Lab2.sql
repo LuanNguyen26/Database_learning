@@ -1,0 +1,109 @@
+Create database VN_GP
+Go
+Use VN_GP
+Go
+Create table Provice_City (
+   Code_PC varchar(5) primary key,
+   Name_PC nvarchar(30) not null,
+   Area float,
+   Population bigint,
+   Region char(15) );
+Create table Border (
+   Code_PC varchar(5),
+   Country varchar(15),
+    Primary key (Code_PC, Country),
+    Foreign key (Code_PC) references Provice_City);
+ Create table Neighbor (
+   Code_PC varchar(5),
+   NB varchar(5),
+   Primary key (Code_PC, NB),
+   Foreign key (Code_PC) references Provice_City
+    )
+select * from Provice_City
+
+1.	Write An SQL Query to show the names of the provinces/cities with the regions is in the North.
+Select Name_PC from Provice_city where Region = 'North'
+
+2.	Write An SQL Query to show the names of the provinces/cities which have area more than 5000 Km2.
+Select Name_PC from Provice_city where Area >= 5000
+
+3.	Write An SQL Query to compute the area average of all provinces/cities (sum(area) divide count(Code_p_c)).
+Select (Sum(Area)/Count(Code_PC)) as Average from Provice_city
+
+4.	Write An SQL Query to show the names and the population of provinces/cities which have area more than 10000 Km2.
+Select Name_PC, Population 
+from Provice_city
+where Area >= 10001
+
+5.	Write An SQL Query to show the code, the name of the border provinces/cities located in the North region.
+Select Code_PC, Name_PC from Provice_city where Region = 'North'
+
+6.	Please indicate the country code is the border of the provinces in the South.
+Select distinct(COUNTRY)
+from Border
+where Code_PC in (select Code_PC from Provice_city where Region = 'South')
+
+7.	Show the average area of the provinces/cities. (Use function AVG)
+Select AVG(Area) as AVG_Area from Provice_city
+
+8.	Show the population density along with the names of provinces / cities.
+Select Name_PC, (Population/Area) as Population_Density
+from Provice_city
+
+9.	Show the name of the neighboring provinces/cities with ‘Long An’.
+Select Name_PC
+from Provice_city
+where Code_PC in (select Code_PC from Neighbor where NB = 'LA')
+
+10.	Display the total of the provinces/cities bordering with cambodia.
+Select Count(Code_PC) as Total
+from Border
+where Country = 'CPC'
+
+11.	Display the name of the provinces/cities with the largest area.
+Select Name_PC
+from Provice_city
+where Area = (Select Max(Area) from Provice_city)
+
+12.	Display the name of the provinces/cities have the lowest population density.
+Select Name_PC
+from Provice_city
+where (Population/Area) = (select Min(Population/Area) from Provice_city)
+
+13.	Display the names of the provinces/cities bordering with two different countries.
+Select Name_PC
+from Provice_city 
+where Code_pc in (Select Code_PC from Border group by Code_PC having count(code_pc) >= 2)
+
+14.	Display the list of regions with the total of provinces/cities in those regions.
+Select Region, count(Code_PC) as total_P_C
+from Provice_city
+Group by Region
+
+15.	Show the name the provinces/cities with the most neighbors.
+SELECT Code_PC
+FROM Neighbor
+Group by Code_PC having Count(NB)= (select top 1 count (NB) CountNB from Neighbor
+Group by Code_PC order by CountNB desc )
+
+16.	Show the name of the provinces/cities have smaller area than the average of all provinces/cities.
+Select Name_PC,Area
+from Provice_City
+where Area < ( select AVG(Area) from Provice_city)
+
+17.	Show the names of the provinces /cities border with provinces/cities in the 'South' but They are not in the 'South'.
+select Name_PC
+from Provice_city
+where code_PC in (
+select Code_PC from Neighbor  where NB 
+in (select code_PC from Provice_city where Region = 'South')
+and Code_PC not in (select code_PC from Provice_city where Region = 'South')
+
+18.	Display the names of provinces/cities have the area larger than all of its neighbors.
+select P.Name_PC
+from Provice_City P,(select N.Code_PC , max (P2.Area) MaxArea from Neighbor N, Provice_City P2
+where P2.Code_PC = N.NB
+group by N.Code_PC) A
+where A.Code_PC = P.Code_PC and P.Area > A.MaxArea
+
+19.Display the names of the provinces/cities that we can go to by going from 'Ho Chi Minh City' through three different provinces/cities by car (Do not return to the province/city has passed).
