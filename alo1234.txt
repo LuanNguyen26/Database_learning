@@ -1,1 +1,23 @@
-Hôm nay 21/7 không có gì vui, chỉ có một mình tui :))
+<html>
+<head>
+	<type></type>
+	<link href="">khong gion</link>
+	<link id="" name="" ></link>
+</head>
+
+<body>
+	<div>
+		<container>
+			<div>
+				<h1></h1>
+				<p></p>
+			</div>
+		</container>
+	</div>
+	</break>
+</br>
+<h1></h1>
+<p></p>
+<?php></?php>
+</body>
+</html>
